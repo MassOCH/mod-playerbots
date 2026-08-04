@@ -23,7 +23,9 @@ public:
     virtual void UpdateAI(uint32 elapsed, bool minimal = false);
     virtual void UpdateAIInternal(uint32 elapsed, bool minimal = false) = 0;
     bool IsActive();
-    bool IsBotAI() const;
+    // Defined inline: this is called on virtually every bot interaction, and an
+    // out-of-line call/ret to read a single bool showed up at ~1% of server CPU.
+    bool IsBotAI() const { return _isBotAI; }
 
 protected:
     uint32 nextAICheckDelay;

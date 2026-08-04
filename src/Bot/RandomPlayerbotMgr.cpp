@@ -2101,17 +2101,15 @@ void RandomPlayerbotMgr::Refresh(Player* bot)
 
 bool RandomPlayerbotMgr::IsRandomBot(Player* bot)
 {
-    if (bot && GET_PLAYERBOT_AI(bot))
-    {
-        if (GET_PLAYERBOT_AI(bot)->IsRealPlayer())
-            return false;
-    }
-    if (bot)
-    {
-        return IsRandomBot(bot->GetGUID().GetCounter());
-    }
+    if (!bot)
+        return false;
 
-    return false;
+    // Resolve the AI once: GET_PLAYERBOT_AI is a hash lookup, and this is a hot path.
+    PlayerbotAI* botAI = GET_PLAYERBOT_AI(bot);
+    if (botAI && botAI->IsRealPlayer())
+        return false;
+
+    return IsRandomBot(bot->GetGUID().GetCounter());
 }
 
 bool RandomPlayerbotMgr::IsRandomBot(ObjectGuid::LowType bot)
